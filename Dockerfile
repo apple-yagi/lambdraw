@@ -9,7 +9,8 @@ ADD go.mod go.sum ./
 RUN go mod download 
 # build
 ADD . .
-RUN go build -o /main
+ENV GO111MODULE=on
+RUN GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o /main cmd/main.go
 # copy artifacts to a clean image
 FROM alpine
 COPY --from=build /main /main
