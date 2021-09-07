@@ -15,4 +15,4 @@ restart:
 	@make build
 	@make run
 invoke:
-	curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
+	curl -H "Content-Type: image/png" --data-binary "@./tmp/original/gopher.png" -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations"
