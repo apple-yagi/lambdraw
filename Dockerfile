@@ -1,5 +1,3 @@
-FROM go:1.17-alpine
-
 FROM alpine as build
 # install build tools
 RUN apk add go git
