@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"bytes"
@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
 // Response is of type APIGatewayProxyResponse
@@ -35,8 +34,4 @@ func Handler(ctx context.Context) (Response, error) {
 	}
 
 	return resp, nil
-}
-
-func main() {
-	lambda.Start(Handler)
 }

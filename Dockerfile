@@ -10,7 +10,7 @@ RUN go mod download
 # build
 ADD . .
 ENV GO111MODULE=on
-RUN GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o /main cmd/main.go
+RUN GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o /main /cmd/api/main.go
 # copy artifacts to a clean image
 FROM alpine
 COPY --from=build /main /main
