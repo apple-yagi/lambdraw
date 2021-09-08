@@ -2,17 +2,24 @@ package handler
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
+	"resize-api/pkg/uploader"
 
 	"github.com/aws/aws-lambda-go/events"
 )
+
+// Request is of type APIGatewayProxyRequest
+type Request events.APIGatewayProxyRequest
 
 // Response is of type APIGatewayProxyResponse
 type Response events.APIGatewayProxyResponse
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
-func Handler(ctx context.Context) (Response, error) {
+func Handler(req Request) (Response, error) {
+	err := uploader.Put(); if err != nil {
+		return Response{StatusCode: 500}, err
+	}
+
 	var buf bytes.Buffer
 
 	body, err := json.Marshal(map[string]interface{}{
