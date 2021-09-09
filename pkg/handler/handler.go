@@ -14,9 +14,21 @@ type Request events.APIGatewayProxyRequest
 // Response is of type APIGatewayProxyResponse
 type Response events.APIGatewayProxyResponse
 
+type Handler interface {
+	Execute(Request) (Response, error)
+}
+
+type HandlerImpl struct {
+	Uploader uploader.Uploader
+}
+
+func NewHandler(Uploader uploader.Uploader) Handler {
+	return &HandlerImpl{Uploader: Uploader}
+}
+
 // Handler is our lambda handler invoked by the `lambda.Start` function call
-func Handler(req Request) (Response, error) {
-	err := uploader.Put(); if err != nil {
+func (h *HandlerImpl) Execute(req Request) (Response, error) {
+	err := h.Uploader.Execute(); if err != nil {
 		return Response{StatusCode: 500}, err
 	}
 
