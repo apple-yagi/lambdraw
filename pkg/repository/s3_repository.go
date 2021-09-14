@@ -33,6 +33,7 @@ func (r S3Repository) Put() error {
 		Bucket: aws.String("resizeapi"),
 		Key: aws.String("test"),
 		Body: f,
+		ACL:    aws.String("public-read"),
 	})
 	if err != nil {
 		return err
