@@ -3,7 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
-	"resize-api/pkg/uploader"
+	"resize-api/pkg/domain"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -14,21 +14,17 @@ type Request events.APIGatewayProxyRequest
 // Response is of type APIGatewayProxyResponse
 type Response events.APIGatewayProxyResponse
 
-type Handler interface {
-	Execute(Request) (Response, error)
+type Handler struct {
+	Repository domain.Repository
 }
 
-type HandlerImpl struct {
-	Uploader uploader.Uploader
-}
-
-func NewHandler(Uploader uploader.Uploader) Handler {
-	return &HandlerImpl{Uploader: Uploader}
+func NewHandler(r domain.Repository) Handler {
+	return Handler{Repository: r}
 }
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
-func (h *HandlerImpl) Execute(req Request) (Response, error) {
-	err := h.Uploader.Execute(); if err != nil {
+func (h *Handler) Execute(req Request) (Response, error) {
+	err := h.Repository.Put(); if err != nil {
 		return Response{StatusCode: 500}, err
 	}
 

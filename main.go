@@ -2,13 +2,13 @@ package main
 
 import (
 	"resize-api/pkg/handler"
-	"resize-api/pkg/uploader"
+	"resize-api/pkg/repository"
 
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
-	uploader := uploader.NewS3Uploader()
-	handler := handler.NewHandler(uploader)
+	repository := repository.NewS3Repository()
+	handler := handler.NewHandler(repository)
 	lambda.Start(handler.Execute)
 }
