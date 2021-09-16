@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"resize-api/pkg/domain"
@@ -30,15 +31,13 @@ func NewHandler(r domain.Repository) Handler {
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func (h *Handler) Execute(req Request) (Response, error) {
-	jsonBytes := []byte(req.Body)
-	jb := new(JsonBody)
-	fmt.Println(jsonBytes)
-
-	if unmarshalErr := json.Unmarshal(jsonBytes, jb); unmarshalErr != nil {
-		return Response{StatusCode: 500}, unmarshalErr
+	data, decodeErr := base64.StdEncoding.DecodeString(req.Body)
+	if decodeErr != nil {
+		fmt.Println(decodeErr)
+		return Response{StatusCode: 500}, decodeErr
 	}
 
-	err := h.Repository.Put(); if err != nil {
+	err := h.Repository.Put(data); if err != nil {
 		return Response{StatusCode: 500}, err
 	}
 

@@ -1,7 +1,8 @@
 package repository
 
 import (
-	"os"
+	"bytes"
+	"fmt"
 	"resize-api/pkg/domain"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -23,19 +24,14 @@ func NewS3Repository() domain.Repository {
 	return S3Repository{Uploader: uploader}
 }
 
-func (r S3Repository) Put() error {
-	f, err := os.Open("./tmp/original/gopher.png")
-	if err != nil {
-		return err
-	}
-
-	_, err = r.Uploader.Upload(&s3manager.UploadInput{
+func (r S3Repository) Put(binary []byte) error {
+	if _, err := r.Uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String("resizeapi"),
-		Key: aws.String("test"),
-		Body: f,
+		Key: aws.String("gopher.png"),
+		Body: bytes.NewReader(binary),
 		ACL:    aws.String("public-read"),
-	})
-	if err != nil {
+	}); err != nil {
+		fmt.Println("S3 upload error")
 		return err
 	}
 
