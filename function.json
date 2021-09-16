@@ -1,0 +1,13 @@
+{
+  "Description": "",
+  "FunctionName": "resize-api",
+  "Handler": "hello",
+  "MemorySize": 512,
+  "Role": "arn:aws:iam::054984637815:role/service-role/resize-api-role-q756vqcs",
+  "Runtime": "go1.x",
+  "Tags": {},
+  "Timeout": 15,
+  "TracingConfig": {
+    "Mode": "PassThrough"
+  }
+}
