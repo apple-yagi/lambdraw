@@ -21,4 +21,4 @@ down:
 	@make stop
 	@make rm
 invoke:
-	curl -H "Content-Type: image/png" --data-binary "@./tmp/original/gopher.png" -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations"
+	curl -X POST -H 'Content-type: image/png' --data-binary "@./tmp/original/gopher.png" "http://localhost:9000/2015-03-31/functions/function/invocations"

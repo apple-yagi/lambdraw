@@ -11,6 +11,11 @@ import (
 // Request is of type APIGatewayProxyRequest
 type Request events.APIGatewayProxyRequest
 
+type JsonBody struct {
+	Image  string `json:"image"`
+	UserId int    `json:"user_id"`
+}
+
 // Response is of type APIGatewayProxyResponse
 type Response events.APIGatewayProxyResponse
 
@@ -24,6 +29,13 @@ func NewHandler(r domain.Repository) Handler {
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func (h *Handler) Execute(req Request) (Response, error) {
+	jsonBytes := []byte(req.Body)
+	jb := new(JsonBody)
+
+	if unmarshalErr := json.Unmarshal(jsonBytes, jb); unmarshalErr != nil {
+		return Response{StatusCode: 500}, unmarshalErr
+	}
+
 	err := h.Repository.Put(); if err != nil {
 		return Response{StatusCode: 500}, err
 	}
