@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"resize-api/pkg/domain"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -31,6 +32,7 @@ func NewHandler(r domain.Repository) Handler {
 func (h *Handler) Execute(req Request) (Response, error) {
 	jsonBytes := []byte(req.Body)
 	jb := new(JsonBody)
+	fmt.Println(jsonBytes)
 
 	if unmarshalErr := json.Unmarshal(jsonBytes, jb); unmarshalErr != nil {
 		return Response{StatusCode: 500}, unmarshalErr
