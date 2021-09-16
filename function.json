@@ -1,8 +1,8 @@
 {
   "Description": "",
   "FunctionName": "resize-api",
-  "Handler": "hello",
-  "MemorySize": 512,
+  "Handler": "main.go",
+  "MemorySize": 128,
   "Role": "arn:aws:iam::054984637815:role/service-role/resize-api-role-q756vqcs",
   "Runtime": "go1.x",
   "Tags": {},
