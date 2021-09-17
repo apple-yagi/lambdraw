@@ -1,5 +1,11 @@
 {
   "Description": "",
+  "Environment": {
+    "Variables": {
+      "REGION_NAME": "ap-northeast-1",
+      "BUCKET_NAME": "resizeapi"
+    }
+  },
   "FunctionName": "resize-api",
   "Handler": "bin/main",
   "MemorySize": 128,

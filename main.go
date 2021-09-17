@@ -1,6 +1,7 @@
 package main
 
 import (
+	"resize-api/config"
 	"resize-api/pkg/handler"
 	"resize-api/pkg/repository"
 
@@ -8,7 +9,8 @@ import (
 )
 
 func main() {
-	repository := repository.NewS3Repository()
+	conf := config.NewAwsConfig()
+	repository := repository.NewS3Repository(conf)
 	handler := handler.NewHandler(repository)
 	lambda.Start(handler.Execute)
 }
