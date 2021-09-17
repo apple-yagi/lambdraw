@@ -24,16 +24,17 @@ func NewS3Repository() domain.Repository {
 	return S3Repository{Uploader: uploader}
 }
 
-func (r S3Repository) Put(binary []byte) error {
-	if _, err := r.Uploader.Upload(&s3manager.UploadInput{
+func (r S3Repository) Put(binary []byte) (string, error) {
+	result, err := r.Uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String("resizeapi"),
 		Key: aws.String("gopher.png"),
 		Body: bytes.NewReader(binary),
 		ACL:    aws.String("public-read"),
-	}); err != nil {
+	}); 
+	if err != nil {
 		fmt.Println("S3 upload error")
-		return err
+		return "", err
 	}
 
-	return nil
+	return result.Location ,nil
 }

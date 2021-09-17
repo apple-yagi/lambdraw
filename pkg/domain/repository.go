@@ -1,5 +1,5 @@
 package domain
 
 type Repository interface {
-	Put(binary []byte) error
+	Put(binary []byte) (string, error)
 }

@@ -37,14 +37,15 @@ func (h *Handler) Execute(req Request) (Response, error) {
 		return Response{StatusCode: 500}, decodeErr
 	}
 
-	err := h.Repository.Put(data); if err != nil {
+	url, err := h.Repository.Put(data); 
+	if err != nil {
 		return Response{StatusCode: 500}, err
 	}
 
 	var buf bytes.Buffer
 
 	body, err := json.Marshal(map[string]interface{}{
-		"message": "Okay so your other function also executed successfully!",
+		"url": url,
 	})
 	if err != nil {
 		return Response{StatusCode: 404}, err
