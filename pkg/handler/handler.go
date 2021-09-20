@@ -13,11 +13,6 @@ import (
 // Request is of type APIGatewayProxyRequest
 type Request events.APIGatewayProxyRequest
 
-type JsonBody struct {
-	Image  string `json:"image"`
-	UserId int    `json:"user_id"`
-}
-
 // Response is of type APIGatewayProxyResponse
 type Response events.APIGatewayProxyResponse
 
