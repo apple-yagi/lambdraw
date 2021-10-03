@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
+	"log"
 	"resize-api/pkg/s3"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -28,7 +28,7 @@ func NewHandler(c *s3.Client) *Handler {
 func (h *Handler) Execute(req Request) (Response, error) {
 	data, decodeErr := base64.StdEncoding.DecodeString(req.Body)
 	if decodeErr != nil {
-		fmt.Println(decodeErr)
+		log.Println(decodeErr)
 		return Response{StatusCode: 500}, decodeErr
 	}
 
