@@ -1,0 +1,22 @@
+{
+  "name": "resize-api",
+  "version": "1.0.0",
+  "description": "## AWS Lambda Runtime Interface Emulator (RIE)",
+  "main": "invoke.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apple-yagi/resize-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apple-yagi/resize-api/issues"
+  },
+  "homepage": "https://github.com/apple-yagi/resize-api#readme",
+  "dependencies": {
+    "node-fetch": "^3.0.0"
+  }
+}

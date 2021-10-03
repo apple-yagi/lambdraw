@@ -32,6 +32,14 @@ deploy:
 invoke:
 	curl -X POST -H 'Content-type: image/png' --data-binary "@./tmp/original/gopher.png" "http://localhost:9000/2015-03-31/functions/function/invocations"
 
-.PHONY: post
+.PHONY: execute
 post:
 	curl -X POST -H 'Content-type: image/png' --data-binary "@./tmp/original/gopher.png" https://3d8r7a230b.execute-api.ap-northeast-1.amazonaws.com/default/resize-api
+
+.PHONY: execute-node
+execute-node:
+	@node execute/node/main.mjs
+
+.PHONY: execute-php
+execute-php:
+	@php execute/php/main.php
