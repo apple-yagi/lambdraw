@@ -6,4 +6,4 @@ ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest
 RUN chmod 755 /usr/bin/aws-lambda-rie
 COPY entry.sh /
 RUN chmod 755 /entry.sh
-ENTRYPOINT [ "/entry.sh" ]  
+ENTRYPOINT [ "/entry.sh" ]
