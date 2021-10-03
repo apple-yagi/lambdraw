@@ -3,14 +3,14 @@ package main
 import (
 	"resize-api/config"
 	"resize-api/pkg/handler"
-	"resize-api/pkg/repository"
+	"resize-api/pkg/s3"
 
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
 	conf := config.NewAwsConfig()
-	repository := repository.NewS3Repository(conf)
-	handler := handler.NewHandler(repository)
+	client := s3.NewClient(conf)
+	handler := handler.NewHandler(client)
 	lambda.Start(handler.Execute)
 }

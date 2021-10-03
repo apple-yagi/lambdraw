@@ -1,4 +1,4 @@
-package repository
+package s3
 
 import (
 	"bytes"
@@ -7,7 +7,6 @@ import (
 	"image/jpeg"
 	"image/png"
 	"resize-api/config"
-	"resize-api/pkg/domain"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -15,22 +14,22 @@ import (
 	"golang.org/x/image/draw"
 )
 
-type S3Repository struct {
+type Client struct {
 	Uploader *s3manager.Uploader
 	Conf *config.AwsConfig
 }
 
-func NewS3Repository(conf *config.AwsConfig) domain.Repository {
+func NewClient(conf *config.AwsConfig) *Client {
 	sess := session.Must(session.NewSession(&aws.Config{
 		Region: aws.String(conf.RegionName),
 	}))
 
 	uploader := s3manager.NewUploader(sess)
 
-	return S3Repository{Uploader: uploader, Conf: conf}
+	return &Client{Uploader: uploader, Conf: conf}
 }
 
-func (r S3Repository) Put(binary []byte) (string, error) {
+func (c *Client) PutImage(binary []byte) (string, error) {
 	reader := bytes.NewReader(binary)
 	img, t, err := image.Decode(reader)
 	if err != nil {
@@ -51,8 +50,8 @@ func (r S3Repository) Put(binary []byte) (string, error) {
 			png.Encode(buff, canvas)
 	}
 
-	result, err := r.Uploader.Upload(&s3manager.UploadInput{
-		Bucket: aws.String(r.Conf.BucketName),
+	result, err := c.Uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(c.Conf.BucketName),
 		Key: aws.String("gopppher" + "." + t),
 		Body: bytes.NewReader(buff.Bytes()),
 		ACL:    aws.String("public-read"),

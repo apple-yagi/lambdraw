@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"resize-api/pkg/domain"
+	"resize-api/pkg/s3"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -17,11 +17,11 @@ type Request events.APIGatewayProxyRequest
 type Response events.APIGatewayProxyResponse
 
 type Handler struct {
-	Repository domain.Repository
+	Client *s3.Client
 }
 
-func NewHandler(r domain.Repository) Handler {
-	return Handler{Repository: r}
+func NewHandler(c *s3.Client) *Handler {
+	return &Handler{Client: c}
 }
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
@@ -32,7 +32,7 @@ func (h *Handler) Execute(req Request) (Response, error) {
 		return Response{StatusCode: 500}, decodeErr
 	}
 
-	url, err := h.Repository.Put(data); 
+	url, err := h.Client.PutImage(data); 
 	if err != nil {
 		return Response{StatusCode: 500}, err
 	}
