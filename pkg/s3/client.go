@@ -2,10 +2,10 @@ package s3
 
 import (
 	"bytes"
-	"fmt"
 	"image"
 	"image/jpeg"
 	"image/png"
+	"log"
 	"resize-api/config"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -33,7 +33,7 @@ func (c *Client) PutImage(binary []byte) (string, error) {
 	reader := bytes.NewReader(binary)
 	img, t, err := image.Decode(reader)
 	if err != nil {
-		fmt.Println("Image decode error")
+		log.Panic(err)
 		return "", err
 	}
 
@@ -57,7 +57,7 @@ func (c *Client) PutImage(binary []byte) (string, error) {
 		ACL:    aws.String("public-read"),
 	}); 
 	if err != nil {
-		fmt.Println("S3 upload error")
+		log.Panic(err)
 		return "", err
 	}
 

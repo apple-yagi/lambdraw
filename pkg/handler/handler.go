@@ -28,12 +28,13 @@ func NewHandler(c *s3.Client) *Handler {
 func (h *Handler) Execute(req Request) (Response, error) {
 	data, decodeErr := base64.StdEncoding.DecodeString(req.Body)
 	if decodeErr != nil {
-		log.Println(decodeErr)
+		log.Panic(decodeErr)
 		return Response{StatusCode: 500}, decodeErr
 	}
 
 	url, err := h.Client.PutImage(data); 
 	if err != nil {
+		log.Panic(err)
 		return Response{StatusCode: 500}, err
 	}
 
@@ -43,6 +44,7 @@ func (h *Handler) Execute(req Request) (Response, error) {
 		"url": url,
 	})
 	if err != nil {
+		log.Panic(err)
 		return Response{StatusCode: 404}, err
 	}
 	json.HTMLEscape(&buf, body)
