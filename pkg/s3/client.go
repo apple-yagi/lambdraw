@@ -2,7 +2,6 @@ package s3
 
 import (
 	"bytes"
-	"log"
 	"resize-api/config"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -33,7 +32,6 @@ func (c *Client) PutImage(key string, buff *bytes.Buffer) (string, error) {
 		ACL:    aws.String("public-read"),
 	}); 
 	if err != nil {
-		log.Panic(err)
 		return "", err
 	}
 
