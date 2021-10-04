@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"log"
+	"resize-api/pkg/resizer"
 	"resize-api/pkg/s3"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -32,7 +33,13 @@ func (h *Handler) Execute(req Request) (Response, error) {
 		return Response{StatusCode: 500}, decodeErr
 	}
 
-	url, err := h.Client.PutImage(data); 
+	buff, err := resizer.Resize(data);
+	if err != nil {
+		log.Panic(err)
+		return Response{StatusCode: 500}, err
+	}
+
+	url, err := h.Client.PutImage("gopher.png", buff);
 	if err != nil {
 		log.Panic(err)
 		return Response{StatusCode: 500}, err
