@@ -19,10 +19,11 @@ type Response events.APIGatewayProxyResponse
 
 type Handler struct {
 	Client *s3.Client
+	Resizer *resizer.Resizer
 }
 
-func NewHandler(c *s3.Client) *Handler {
-	return &Handler{Client: c}
+func NewHandler(c *s3.Client, r *resizer.Resizer) *Handler {
+	return &Handler{Client: c, Resizer: r}
 }
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
@@ -33,7 +34,7 @@ func (h *Handler) Execute(req Request) (Response, error) {
 		return Response{StatusCode: 500}, decodeErr
 	}
 
-	buff, err := resizer.Resize(data);
+	buff, err := h.Resizer.Resize(data);
 	if err != nil {
 		log.Panic(err)
 		return Response{StatusCode: 500}, err

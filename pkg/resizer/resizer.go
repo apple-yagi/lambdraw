@@ -9,7 +9,13 @@ import (
 	"golang.org/x/image/draw"
 )
 
-func Resize(binary []byte) (*bytes.Buffer, error) {
+type Resizer struct {}
+
+func NewResizer() *Resizer {
+	return &Resizer{}
+}
+
+func (r *Resizer) Resize(binary []byte) (*bytes.Buffer, error) {
 	reader := bytes.NewReader(binary)
 	img, t, err := image.Decode(reader)
 	if err != nil {
