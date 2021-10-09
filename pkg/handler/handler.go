@@ -25,6 +25,10 @@ func NewHandler(c s3.S3, r *resizer.Resizer) *Handler {
 }
 
 func (h *Handler) Execute(req Request) *Response {
+	if len(req.Body) == 0 {
+		return h.newResponse("", errors.New("must request body"))
+	}
+
 	data, err := base64.StdEncoding.DecodeString(req.Body)
 	if err != nil {
 		return h.newResponse("", errors.New("failed DecodeString req.Body"))
