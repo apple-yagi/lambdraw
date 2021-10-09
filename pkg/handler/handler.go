@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"resize-api/pkg/resizer"
 	"resize-api/pkg/s3"
 
@@ -26,24 +27,24 @@ func NewHandler(c s3.S3, r *resizer.Resizer) *Handler {
 func (h *Handler) Execute(req Request) *Response {
 	data, err := base64.StdEncoding.DecodeString(req.Body)
 	if err != nil {
-		return h.newResponse("", err)
+		return h.newResponse("", errors.New("failed DecodeString req.Body"))
 	}
 
 	buff, err := h.Resizer.Resize(data);
 	if err != nil {
-		return h.newResponse("", err)
+		return h.newResponse("", errors.New("failed Resize"))
 	}
 
 	url, err := h.Client.PutImage("gopher.png", buff);
 	if err != nil {
-		return h.newResponse("", err)
+		return h.newResponse("", errors.New("failed PutImage"))
 	}
 
 	body, err := json.Marshal(map[string]interface{}{
 		"url": url,
 	})
 	if err != nil {
-		return h.newResponse("", err)
+		return h.newResponse("", errors.New("failed Marshal"))
 	}
 
 	var buf bytes.Buffer
