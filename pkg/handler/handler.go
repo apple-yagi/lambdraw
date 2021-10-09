@@ -4,68 +4,67 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"log"
 	"resize-api/pkg/resizer"
 	"resize-api/pkg/s3"
 
 	"github.com/aws/aws-lambda-go/events"
 )
 
-// Request is of type APIGatewayProxyRequest
 type Request events.APIGatewayProxyRequest
 
-// Response is of type APIGatewayProxyResponse
 type Response events.APIGatewayProxyResponse
 
 type Handler struct {
-	Client *s3.Client
+	Client s3.S3
 	Resizer *resizer.Resizer
 }
 
-func NewHandler(c *s3.Client, r *resizer.Resizer) *Handler {
+func NewHandler(c s3.S3, r *resizer.Resizer) *Handler {
 	return &Handler{Client: c, Resizer: r}
 }
 
-// Handler is our lambda handler invoked by the `lambda.Start` function call
-func (h *Handler) Execute(req Request) (Response, error) {
-	data, decodeErr := base64.StdEncoding.DecodeString(req.Body)
-	if decodeErr != nil {
-		log.Panic(decodeErr)
-		return Response{StatusCode: 500}, decodeErr
+func (h *Handler) Execute(req Request) *Response {
+	data, err := base64.StdEncoding.DecodeString(req.Body)
+	if err != nil {
+		return h.newResponse("", err)
 	}
 
 	buff, err := h.Resizer.Resize(data);
 	if err != nil {
-		log.Panic(err)
-		return Response{StatusCode: 500}, err
+		return h.newResponse("", err)
 	}
 
 	url, err := h.Client.PutImage("gopher.png", buff);
 	if err != nil {
-		log.Panic(err)
-		return Response{StatusCode: 500}, err
+		return h.newResponse("", err)
 	}
-
-	var buf bytes.Buffer
 
 	body, err := json.Marshal(map[string]interface{}{
 		"url": url,
 	})
 	if err != nil {
-		log.Panic(err)
-		return Response{StatusCode: 404}, err
+		return h.newResponse("", err)
 	}
+
+	var buf bytes.Buffer
 	json.HTMLEscape(&buf, body)
 
-	resp := Response{
-		StatusCode:      200,
-		IsBase64Encoded: false,
-		Body:            buf.String(),
-		Headers: map[string]string{
-			"Content-Type":           "application/json",
-			"X-MyCompany-Func-Reply": "world-handler",
-		},
+	return h.newResponse(buf.String(), nil)
+}
+
+func (h *Handler) newResponse(body string, err error) *Response {
+	if err != nil {
+		return &Response{
+			StatusCode: 500,
+			Body: err.Error(),
+		}
 	}
 
-	return resp, nil
+	return &Response{
+		StatusCode: 200,
+		Body:       body,
+		Headers: map[string]string{
+			"Content-Type":           "application/json",
+		},
+	}
 }

@@ -10,8 +10,14 @@ import (
 )
 
 type Client struct {
+	S3
+
 	Uploader *s3manager.Uploader
 	Conf *config.AwsConfig
+}
+
+type S3 interface {
+	PutImage(key string, buff *bytes.Buffer) (string, error)
 }
 
 func NewClient(conf *config.AwsConfig) *Client {
