@@ -2,9 +2,7 @@ package handler
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
-	"os"
 	"resize-api/pkg/resizer"
 	"resize-api/pkg/s3"
 	"testing"
@@ -23,9 +21,9 @@ func (c *fakeS3Client) PutImage(key string, buff *bytes.Buffer) (string, error) 
 func TestExecute(t *testing.T) {
 	c := &fakeS3Client{}
 	h := NewHandler(c, &resizer.Resizer{})
-	req := Request{}
+	req := NewEmptyRequest()
 
-	actual := h.Execute(req)
+	actual := h.Execute(*req)
 	expected := Response{
 		StatusCode: 500,
 		Body: "must request body",
@@ -40,23 +38,9 @@ func TestExecute(t *testing.T) {
 		},
 	}
 
-	file, _ := os.Open("./testdata/gopher.png")
-	defer file.Close()
-
-	fi, _ := file.Stat()
-	size := fi.Size()
-
-	data := make([]byte, size)
-	file.Read(data)
-
-	enc := base64.StdEncoding.EncodeToString(data)
-
-	req = Request{
-		IsBase64Encoded: true,
-		Body: enc,
-	}
+	req = NewSuccessRequest()
 	
-	actual = h.Execute(req)
+	actual = h.Execute(*req)
 	body, err := json.Marshal(map[string]interface{}{
 		"url": "test",
 	})
