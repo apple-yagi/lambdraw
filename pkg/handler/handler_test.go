@@ -18,7 +18,33 @@ func (c *fakeS3Client) PutImage(key string, buff *bytes.Buffer) (string, error) 
 	return c.FakePutImage(key, buff)
 }
 
-func TestExecute(t *testing.T) {
+func TestExecuteWhenSuccessRequest(t *testing.T) {
+	c := &fakeS3Client{
+		FakePutImage: func(key string, buff *bytes.Buffer) (string, error) {
+			return "test", nil
+		},
+	}
+	h := NewHandler(c, &resizer.Resizer{})
+	req := NewSuccessRequest()
+	
+	actual := h.Execute(*req)
+	body, err := json.Marshal(map[string]interface{}{
+		"url": "test",
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	var buf bytes.Buffer
+	json.HTMLEscape(&buf, body)
+
+	expected := *h.newResponse(buf.String(), nil)
+	if expected.StatusCode != actual.StatusCode || expected.Body != actual.Body {
+		t.Errorf("expected: %v; actual: %v", expected, actual)
+	}
+}
+
+func TestExecuteWhenEmptyRequest(t *testing.T) {
 	c := &fakeS3Client{}
 	h := NewHandler(c, &resizer.Resizer{})
 	req := NewEmptyRequest()
@@ -30,29 +56,5 @@ func TestExecute(t *testing.T) {
 	}
 	if expected.StatusCode != actual.StatusCode || expected.Body != actual.Body {
 		t.Errorf("actual: %v; expected: %v", actual, expected)
-	}
-	
-	h.Client = &fakeS3Client{
-		FakePutImage: func(key string, buff *bytes.Buffer) (string, error) {
-			return "test", nil
-		},
-	}
-
-	req = NewSuccessRequest()
-	
-	actual = h.Execute(*req)
-	body, err := json.Marshal(map[string]interface{}{
-		"url": "test",
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	var buf bytes.Buffer
-	json.HTMLEscape(&buf, body)
-
-	expected = *h.newResponse(buf.String(), nil)
-	if expected.StatusCode != actual.StatusCode || expected.Body != actual.Body {
-		t.Errorf("expected: %v; actual: %v", expected, actual)
 	}
 }
