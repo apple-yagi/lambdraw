@@ -15,7 +15,7 @@ func TestResizePng(t *testing.T) {
 		t.Errorf("failed resize: %s", err.Error())
 	}
 
-	outputImage(buff, "./testdata/output.png")
+	outputImage(buff, "./testdata/output/gopher.png")
 }
 
 func TestResizeJpeg(t *testing.T) {
@@ -27,7 +27,7 @@ func TestResizeJpeg(t *testing.T) {
 		t.Errorf("failed resize: %s", err.Error())
 	}
 
-	outputImage(buff, "./testdata/output.jpg")
+	outputImage(buff, "./testdata/output/gopher.jpg")
 }
 
 func outputImage(buff *bytes.Buffer, path string) {
