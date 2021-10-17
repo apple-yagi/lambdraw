@@ -7,19 +7,31 @@ import (
 )
 
 func TestResizePng(t *testing.T) {
-	encodedImage := encodeImage()
+	encodedImage := encodeImage("./testdata/gopher.png")
 	resizer := NewResizer()
 
 	buff, err := resizer.Resize([]byte(encodedImage))
 	if err != nil {
-		t.Errorf("Failed resize: %s", err.Error())
+		t.Errorf("failed resize: %s", err.Error())
 	}
 
-	outputImage(buff)
+	outputImage(buff, "./testdata/output.png")
 }
 
-func outputImage(buff *bytes.Buffer) {
-	f, err := os.Create("./testdata/output.png")
+func TestResizeJpeg(t *testing.T) {
+	encodedImage := encodeImage("./testdata/gopher.jpg")
+	resizer := NewResizer()
+
+	buff, err := resizer.Resize([]byte(encodedImage))
+	if err != nil {
+		t.Errorf("failed resize: %s", err.Error())
+	}
+
+	outputImage(buff, "./testdata/output.jpg")
+}
+
+func outputImage(buff *bytes.Buffer, path string) {
+	f, err := os.Create(path)
 	if err != nil {
 		panic(err)
 	}
@@ -31,8 +43,8 @@ func outputImage(buff *bytes.Buffer) {
 	}
 }
 
-func encodeImage() []byte {
-	file, _ := os.Open("./testdata/gopher.png")
+func encodeImage(path string) []byte {
+	file, _ := os.Open(path)
 	defer file.Close()
 
 	fi, _ := file.Stat()
