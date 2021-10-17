@@ -2,3 +2,6 @@ bin/*
 !bin/.gitkeep
 
 tmp
+
+.vscode
+.DS_Store
