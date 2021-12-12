@@ -1,8 +1,8 @@
 <?php
 
-$file = fopen('/Users/ryuya/workspace/resize-api/tmp/original/gopher.png', 'rb');
+$file = fopen('/Users/ryuya/workspace/lambdraw/tmp/original/gopher.png', 'rb');
 
-$curl = curl_init('https://3d8r7a230b.execute-api.ap-northeast-1.amazonaws.com/default/resize-api');
+$curl = curl_init('https://3d8r7a230b.execute-api.ap-northeast-1.amazonaws.com/default/lambdraw');
 curl_setopt_array($curl, [
   CURLOPT_UPLOAD => true,
   CURLOPT_CUSTOMREQUEST => "POST",

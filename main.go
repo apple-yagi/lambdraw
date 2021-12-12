@@ -1,11 +1,10 @@
 package main
 
 import (
-	"resize-api/config"
-	"resize-api/pkg/handler"
-	"resize-api/pkg/resizer"
-	"resize-api/pkg/s3"
-
+	"github.com/apple-yagi/lambdraw/config"
+	"github.com/apple-yagi/lambdraw/pkg/handler"
+	"github.com/apple-yagi/lambdraw/pkg/resizer"
+	"github.com/apple-yagi/lambdraw/pkg/s3"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 

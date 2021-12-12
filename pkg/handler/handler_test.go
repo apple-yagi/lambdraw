@@ -3,9 +3,10 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
-	"resize-api/pkg/resizer"
-	"resize-api/pkg/s3"
 	"testing"
+
+	"github.com/apple-yagi/lambdraw/pkg/resizer"
+	"github.com/apple-yagi/lambdraw/pkg/s3"
 )
 
 type fakeS3Client struct {
@@ -26,8 +27,12 @@ func TestExecuteWhenSuccessRequest(t *testing.T) {
 	}
 	h := NewHandler(c, &resizer.Resizer{})
 	req := NewSuccessRequest()
-	
-	actual := h.Execute(*req)
+
+	actual, err := h.Execute(*req)
+	if err != nil {
+		panic(err)
+	}
+
 	body, err := json.Marshal(map[string]interface{}{
 		"url": "test",
 	})
@@ -38,7 +43,7 @@ func TestExecuteWhenSuccessRequest(t *testing.T) {
 	var buf bytes.Buffer
 	json.HTMLEscape(&buf, body)
 
-	expected := *h.newResponse(buf.String(), nil)
+	expected := *h.newResponse(buf.String())
 	if expected.StatusCode != actual.StatusCode || expected.Body != actual.Body {
 		t.Errorf("expected: %v; actual: %v", expected, actual)
 	}
@@ -49,10 +54,14 @@ func TestExecuteWhenEmptyRequest(t *testing.T) {
 	h := NewHandler(c, &resizer.Resizer{})
 	req := NewEmptyRequest()
 
-	actual := h.Execute(*req)
+	actual, err := h.Execute(*req)
+	if err != nil {
+		panic(err)
+	}
+
 	expected := Response{
 		StatusCode: 500,
-		Body: "must request body",
+		Body:       "must request body",
 	}
 	if expected.StatusCode != actual.StatusCode || expected.Body != actual.Body {
 		t.Errorf("actual: %v; expected: %v", actual, expected)

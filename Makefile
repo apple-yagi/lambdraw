@@ -10,14 +10,14 @@ bin/main: main.go pkg/**/*.go config/aws.go go.mod go.sum
 
 .PHONY: emulate
 emulate:
-	docker build -t resize-api .
-	docker run -d -p 9000:8080 --name resize-api resize-api:latest /main
+	docker build -t lambdraw .
+	docker run -d -p 9000:8080 --name lambdraw lambdraw:latest /main
 
 .PHONY: down
 down:
-	docker stop resize-api
-	docker rm resize-api
-	docker rmi resize-api
+	docker stop lambdraw
+	docker rm lambdraw
+	docker rmi lambdraw
 
 .PHONY: reemulate
 reemulate:
@@ -25,16 +25,16 @@ reemulate:
 	@make emulate
 
 .PHONY: deploy
-deploy:
+deploy: bin/main
 	lambroll deploy
 
 .PHONY: invoke
 invoke:
-	curl -X POST -H 'Content-type: image/png' --data-binary "@./tmp/original/gopher.png" "http://localhost:9000/2015-03-31/functions/function/invocations"
+	curl -X POST -H 'Content-type: image/png' --data-binary "@./pkg/handler/testdata/gopher.png" "http://localhost:9000/2015-03-31/functions/function/invocations"
 
 .PHONY: execute
-post:
-	curl -X POST -H 'Content-type: image/png' --data-binary "@./tmp/original/gopher.png" https://3d8r7a230b.execute-api.ap-northeast-1.amazonaws.com/default/resize-api
+execute:
+	curl -X POST -H 'Content-type: image/png' --data-binary "@./pkg/handler/testdata/gopher.png" https://3d8r7a230b.execute-api.ap-northeast-1.amazonaws.com/default/lambdraw
 
 .PHONY: execute-node
 execute-node:

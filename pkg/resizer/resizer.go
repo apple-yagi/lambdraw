@@ -9,7 +9,7 @@ import (
 	"golang.org/x/image/draw"
 )
 
-type Resizer struct {}
+type Resizer struct{}
 
 func NewResizer() *Resizer {
 	return &Resizer{}
@@ -29,10 +29,10 @@ func (r *Resizer) Resize(binary []byte) (*bytes.Buffer, error) {
 	buff := bytes.NewBuffer([]byte{})
 
 	switch t {
-		case "jpeg":
-			jpeg.Encode(buff, canvas, &jpeg.Options{Quality: 95})
-		default:
-			png.Encode(buff, canvas)
+	case "jpeg":
+		jpeg.Encode(buff, canvas, &jpeg.Options{Quality: 95})
+	default:
+		png.Encode(buff, canvas)
 	}
 
 	return buff, nil

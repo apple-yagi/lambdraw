@@ -1,5 +1,5 @@
 {
-  "name": "resize-api",
+  "name": "lambdraw",
   "version": "1.0.0",
   "description": "## AWS Lambda Runtime Interface Emulator (RIE)",
   "main": "invoke.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/apple-yagi/resize-api.git"
+    "url": "git+https://github.com/apple-yagi/lambdraw.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/apple-yagi/resize-api/issues"
+    "url": "https://github.com/apple-yagi/lambdraw/issues"
   },
-  "homepage": "https://github.com/apple-yagi/resize-api#readme",
+  "homepage": "https://github.com/apple-yagi/lambdraw#readme",
   "dependencies": {
     "node-fetch": "^3.0.0"
   }
